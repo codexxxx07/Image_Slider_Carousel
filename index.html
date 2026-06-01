@@ -1,0 +1,111 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="description"
+      content="Clean 2D image slider with glassmorphism UI (Tailwind + Vanilla JS)"
+    />
+
+    <title>Glass Image Slider</title>
+
+    <!-- Tailwind CLI compiled stylesheet -->
+
+    <link rel="stylesheet" href="./dist/output.css" />
+  </head>
+
+  <body class="min-h-screen bg-white text-gray-900 antialiased">
+    <main
+      class="mx-auto flex min-h-screen w-full max-w-[1100px] flex-col items-center justify-center px-4 py-16"
+    >
+      <header class="mb-10 text-center">
+        <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">
+          Image Slider
+        </h1>
+
+        <p class="mt-2 text-sm font-normal text-gray-500 sm:text-base">
+          Auto-play — hover to pause
+        </p>
+      </header>
+
+      <section class="w-full" aria-label="Image slider">
+        <div
+          id="carousel"
+          class="group relative mx-auto w-full max-w-[880px] rounded-2xl border border-gray-200/40 bg-white/10 p-4 shadow-xl backdrop-blur-lg sm:p-6"
+        >
+          <!-- Viewport: overflow hidden for horizontal slide -->
+
+          <div id="viewport" class="relative overflow-hidden rounded-xl">
+            <div
+              id="track"
+              class="flex gap-4 will-change-transform"
+              role="list"
+              style="transition: transform 0.5s ease-in-out"
+            ></div>
+          </div>
+
+          <!-- Navigation -->
+
+          <button
+            id="prev"
+            type="button"
+            class="absolute left-2 top-[42%] z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200/40 bg-white/30 text-gray-700 shadow-md backdrop-blur-md transition-transform hover:scale-105 hover:bg-white/50 sm:left-4 sm:h-11 sm:w-11"
+            aria-label="Previous slide"
+          >
+            <svg
+              class="h-4 w-4 sm:h-5 sm:w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+
+          <button
+            id="next"
+            type="button"
+            class="absolute right-2 top-[42%] z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200/40 bg-white/30 text-gray-700 shadow-md backdrop-blur-md transition-transform hover:scale-105 hover:bg-white/50 sm:right-4 sm:h-11 sm:w-11"
+            aria-label="Next slide"
+          >
+            <svg
+              class="h-4 w-4 sm:h-5 sm:w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+
+          <!-- Dot indicators -->
+
+          <div
+            id="dots"
+            class="mt-6 flex items-center justify-center gap-2"
+            role="tablist"
+            aria-label="Slide indicators"
+          ></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="./script.js" defer></script>
+  </body>
+</html>
