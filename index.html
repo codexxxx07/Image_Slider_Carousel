@@ -18,9 +18,31 @@
     <link rel="stylesheet" href="./dist/output.css" />
   </head>
 
-  <body class="min-h-screen bg-white text-gray-900 antialiased">
+  <body class="relative min-h-screen overflow-x-hidden bg-white text-gray-900 antialiased">
+    <!-- Floating glass bubbles (decorative) -->
+    <div
+      class="pointer-events-none absolute inset-0 overflow-hidden"
+      aria-hidden="true"
+    >
+      <div
+        class="absolute left-[6%] top-[14%] h-28 w-28 rounded-full bg-white/20 opacity-30 blur-xl sm:h-36 sm:w-36"
+      ></div>
+      <div
+        class="absolute right-[8%] top-[22%] h-40 w-40 rounded-full bg-white/20 opacity-30 blur-xl sm:h-52 sm:w-52"
+      ></div>
+      <div
+        class="absolute bottom-[18%] left-[18%] h-24 w-24 rounded-full bg-white/20 opacity-30 blur-xl sm:h-32 sm:w-32"
+      ></div>
+      <div
+        class="absolute bottom-[28%] right-[14%] h-20 w-20 rounded-full bg-white/20 opacity-30 blur-xl sm:h-28 sm:w-28"
+      ></div>
+      <div
+        class="absolute left-[42%] top-[8%] h-16 w-16 rounded-full bg-white/20 opacity-30 blur-xl"
+      ></div>
+    </div>
+
     <main
-      class="mx-auto flex min-h-screen w-full max-w-[1100px] flex-col items-center justify-center px-4 py-16"
+      class="relative z-10 mx-auto flex min-h-screen w-full max-w-[1100px] flex-col items-center justify-center px-4 py-16"
     >
       <header class="mb-10 text-center">
         <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">
@@ -32,17 +54,17 @@
         </p>
       </header>
 
-      <section class="w-full" aria-label="Image slider">
+      <section class="relative w-full" aria-label="Image slider">
         <div
           id="carousel"
-          class="group relative mx-auto w-full max-w-[880px] rounded-2xl border border-gray-200/40 bg-white/10 p-4 shadow-xl backdrop-blur-lg sm:p-6"
+          class="group relative mx-auto w-full max-w-[920px] rounded-3xl border border-white/30 bg-white/10 p-5 shadow-[0_8px_32px_rgba(0,0,0,0.08)] backdrop-blur-xl sm:p-8"
         >
           <!-- Viewport: overflow hidden for horizontal slide -->
 
-          <div id="viewport" class="relative overflow-hidden rounded-xl">
+          <div id="viewport" class="relative overflow-hidden py-2">
             <div
               id="track"
-              class="flex gap-4 will-change-transform"
+              class="flex gap-6 will-change-transform sm:gap-8"
               role="list"
               style="transition: transform 0.5s ease-in-out"
             ></div>
@@ -53,7 +75,7 @@
           <button
             id="prev"
             type="button"
-            class="absolute left-2 top-[42%] z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200/40 bg-white/30 text-gray-700 shadow-md backdrop-blur-md transition-transform hover:scale-105 hover:bg-white/50 sm:left-4 sm:h-11 sm:w-11"
+            class="absolute left-2 top-[38%] z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-white/30 text-gray-700 shadow-md backdrop-blur-xl transition duration-300 ease-in-out hover:scale-105 hover:bg-white/50 hover:shadow-lg sm:left-4 sm:h-11 sm:w-11"
             aria-label="Previous slide"
           >
             <svg
@@ -75,7 +97,7 @@
           <button
             id="next"
             type="button"
-            class="absolute right-2 top-[42%] z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200/40 bg-white/30 text-gray-700 shadow-md backdrop-blur-md transition-transform hover:scale-105 hover:bg-white/50 sm:right-4 sm:h-11 sm:w-11"
+            class="absolute right-2 top-[38%] z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-white/30 text-gray-700 shadow-md backdrop-blur-xl transition duration-300 ease-in-out hover:scale-105 hover:bg-white/50 hover:shadow-lg sm:right-4 sm:h-11 sm:w-11"
             aria-label="Next slide"
           >
             <svg
