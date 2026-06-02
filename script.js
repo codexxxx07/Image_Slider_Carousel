@@ -125,7 +125,7 @@ function buildSlides() {
       "slide shrink-0 w-[82%] max-w-[520px] sm:w-[75%] sm:max-w-[600px] lg:w-[68%] lg:max-w-[640px]";
 
     item.innerHTML = `
-      <div class="slide-inner scale-90 opacity-70 rounded-3xl border border-white/30 bg-white/10 p-3 shadow-xl shadow-[0_8px_32px_rgba(0,0,0,0.15)] backdrop-blur-xl transition duration-500 ease-in-out hover:scale-105 hover:shadow-2xl">
+      <div class="slide-inner scale-90 opacity-70 rounded-3xl border border-white/30 bg-white/10 p-3 shadow-[0_8px_32px_rgba(0,0,0,0.15)] backdrop-blur-xl transition duration-500 ease-in-out hover:scale-105 hover:shadow-2xl">
         <div class="overflow-hidden rounded-xl">
           <img
             src="${slide.src}"
