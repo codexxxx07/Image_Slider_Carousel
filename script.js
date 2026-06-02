@@ -6,21 +6,17 @@
  * - Auto-play (setInterval), pause on hover
  */
 
-/* Apply stored theme before paint (moved from inline <script> in index.html) */
-if (localStorage.getItem("theme") === "dark") {
-  document.documentElement.classList.add("dark");
-}
-
-/* ——— Light / Dark theme ——— */
+/* ——— Light / Dark theme (session only; always light on reload) ——— */
 
 function initTheme() {
   const toggle = document.getElementById("theme-toggle");
   const icon = document.getElementById("theme-icon");
   if (!toggle || !icon) return;
 
-  const applyTheme = (isDark) => {
-    document.documentElement.classList.toggle("dark", isDark);
-    localStorage.setItem("theme", isDark ? "dark" : "light");
+  document.documentElement.classList.remove("dark");
+
+  const syncIcon = () => {
+    const isDark = document.documentElement.classList.contains("dark");
     icon.textContent = isDark ? "☀️" : "🌙";
     toggle.setAttribute(
       "aria-label",
@@ -28,19 +24,14 @@ function initTheme() {
     );
   };
 
-  const saved = localStorage.getItem("theme");
-  if (saved === "dark" || saved === "light") {
-    applyTheme(saved === "dark");
-  } else {
-    applyTheme(document.documentElement.classList.contains("dark"));
-  }
+  syncIcon();
 
   toggle.addEventListener("click", () => {
-    const nextDark = !document.documentElement.classList.contains("dark");
     icon.style.transform = "scale(0.75) rotate(-90deg)";
     icon.style.opacity = "0";
     window.setTimeout(() => {
-      applyTheme(nextDark);
+      document.documentElement.classList.toggle("dark");
+      syncIcon();
       icon.style.transform = "scale(1) rotate(0deg)";
       icon.style.opacity = "1";
     }, 150);
