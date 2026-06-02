@@ -17,7 +17,7 @@
   </head>
 
   <body
-    class="relative min-h-screen overflow-x-hidden bg-white text-gray-900 antialiased transition-colors duration-300 ease-in-out dark:bg-gray-900 dark:text-white"
+    class="relative flex min-h-screen flex-col overflow-x-hidden bg-white text-gray-900 antialiased transition-colors duration-300 ease-in-out dark:bg-gray-900 dark:text-white"
   >
     <!-- Floating glass bubbles (decorative) -->
     <div
@@ -42,7 +42,7 @@
     </div>
 
     <main
-      class="relative z-10 mx-auto flex min-h-screen w-full max-w-[1100px] flex-col items-center justify-center px-4 py-16 transition-colors duration-300 ease-in-out"
+      class="relative z-10 mx-auto flex w-full max-w-[1100px] flex-1 flex-col items-center justify-center px-4 py-16 transition-colors duration-300 ease-in-out"
     >
       <header class="header-intro relative mb-6 w-full text-center">
         <button
@@ -158,6 +158,14 @@
         </div>
       </section>
     </main>
+
+    <footer
+      class="relative z-10 mt-auto w-full border-t border-white/20 bg-white/10 py-6 text-center text-sm backdrop-blur-lg dark:bg-black/20"
+    >
+      <p class="text-gray-700 dark:text-gray-300">
+        © 2026 Krish | Built with ❤️ and Code | All Rights Reserved
+      </p>
+    </footer>
 
     <script src="./script.js"></script>
   </body>
