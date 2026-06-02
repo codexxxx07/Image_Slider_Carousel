@@ -13,14 +13,6 @@
 
     <title>Glass Image Slider</title>
 
-    <script>
-      if (localStorage.getItem("theme") === "dark") {
-        document.documentElement.classList.add("dark");
-      }
-    </script>
-
-    <!-- Tailwind CLI compiled stylesheet -->
-
     <link rel="stylesheet" href="./dist/output.css" />
   </head>
 
@@ -66,22 +58,6 @@
             >🌙</span
           >
         </button>
-        <style>
-          @keyframes header-intro {
-            from {
-              opacity: 0;
-              transform: translateY(8px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-          .header-intro {
-            animation: header-intro 300ms ease-out forwards;
-          }
-        </style>
-
         <div class="relative mx-auto inline-flex max-w-md flex-col items-center">
           <div
             class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-purple-200 to-blue-200 opacity-40 blur-2xl transition-opacity duration-300 ease-in-out dark:from-purple-900/40 dark:to-blue-900/40 dark:opacity-60"
@@ -120,9 +96,8 @@
           <div id="viewport" class="relative overflow-hidden py-2">
             <div
               id="track"
-              class="flex gap-6 will-change-transform sm:gap-8"
+              class="track-slide flex gap-6 will-change-transform sm:gap-8"
               role="list"
-              style="transition: transform 0.5s ease-in-out"
             ></div>
           </div>
 
@@ -184,6 +159,6 @@
       </section>
     </main>
 
-    <script src="./script.js" defer></script>
+    <script src="./script.js"></script>
   </body>
 </html>

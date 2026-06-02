@@ -9,6 +9,27 @@
   }
 }
 
+/* Header intro animation (moved from index.html <style>) */
+@keyframes header-intro {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header-intro {
+  animation: header-intro 300ms ease-out forwards;
+}
+
+/* Carousel track slide transition (moved from inline style on #track) */
+.track-slide {
+  transition: transform 0.5s ease-in-out;
+}
+
 /* ─── Floating background orbs ─── */
 .blob {
   position: absolute;

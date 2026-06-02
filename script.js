@@ -6,6 +6,11 @@
  * - Auto-play (setInterval), pause on hover
  */
 
+/* Apply stored theme before paint (moved from inline <script> in index.html) */
+if (localStorage.getItem("theme") === "dark") {
+  document.documentElement.classList.add("dark");
+}
+
 /* ——— Light / Dark theme ——— */
 
 function initTheme() {
@@ -41,8 +46,6 @@ function initTheme() {
     }, 150);
   });
 }
-
-initTheme();
 
 const SLIDES = [
   {
@@ -101,18 +104,14 @@ const CONFIG = {
   transition: "transform 0.5s ease-in-out",
 };
 
-const carouselEl = document.getElementById("carousel");
-const viewportEl = document.getElementById("viewport");
-const trackEl = document.getElementById("track");
-const prevBtn = document.getElementById("prev");
-const nextBtn = document.getElementById("next");
-const dotsEl = document.getElementById("dots");
+let carouselEl;
+let viewportEl;
+let trackEl;
+let prevBtn;
+let nextBtn;
+let dotsEl;
 
-if (!carouselEl || !viewportEl || !trackEl || !prevBtn || !nextBtn || !dotsEl) {
-  throw new Error("Slider elements not found. Check HTML ids.");
-}
-
-const realCount = SLIDES.length;
+let realCount;
 /** Index in track (includes leading + trailing clones) */
 let currentIndex = 1;
 let isPaused = false;
@@ -317,7 +316,19 @@ function bindEvents() {
   });
 }
 
-function init() {
+function initSlider() {
+  carouselEl = document.getElementById("carousel");
+  viewportEl = document.getElementById("viewport");
+  trackEl = document.getElementById("track");
+  prevBtn = document.getElementById("prev");
+  nextBtn = document.getElementById("next");
+  dotsEl = document.getElementById("dots");
+
+  if (!carouselEl || !viewportEl || !trackEl || !prevBtn || !nextBtn || !dotsEl) {
+    throw new Error("Slider elements not found. Check HTML ids.");
+  }
+
+  realCount = SLIDES.length;
   buildSlides();
   buildDots();
   goToTrackIndex(1, false);
@@ -325,4 +336,7 @@ function init() {
   startAutoplay();
 }
 
-init();
+document.addEventListener("DOMContentLoaded", () => {
+  initTheme();
+  initSlider();
+});
