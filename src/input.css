@@ -25,6 +25,67 @@
   animation: header-intro 300ms ease-out forwards;
 }
 
+/* ─── Full-page skeleton loader ─── */
+body.skeleton-loading #skeleton-loader ~ * {
+  opacity: 0;
+}
+
+body.skeleton-revealed #skeleton-loader ~ * {
+  opacity: 1;
+  transition: opacity 0.55s ease-out;
+}
+
+#skeleton-loader.skeleton-loader--exit {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: #e5e7eb;
+}
+
+.dark .skeleton-shimmer {
+  background-color: #374151;
+}
+
+.skeleton-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.55) 45%,
+    rgba(255, 255, 255, 0.7) 50%,
+    rgba(255, 255, 255, 0.55) 55%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: skeleton-shimmer-wave 1.6s ease-in-out infinite;
+}
+
+.dark .skeleton-shimmer::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.04) 45%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.04) 55%,
+    transparent 100%
+  );
+}
+
+@keyframes skeleton-shimmer-wave {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 /* Carousel track slide transition (moved from inline style on #track) */
 .track-slide {
   transition: transform 0.5s ease-in-out;

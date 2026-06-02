@@ -17,8 +17,133 @@
   </head>
 
   <body
-    class="relative flex min-h-screen flex-col overflow-x-hidden bg-white text-gray-900 antialiased transition-colors duration-300 ease-in-out dark:bg-gray-900 dark:text-white"
+    class="skeleton-loading relative flex min-h-screen flex-col overflow-x-hidden bg-white text-gray-900 antialiased transition-colors duration-300 ease-in-out dark:bg-gray-900 dark:text-white"
   >
+    <!-- Full-page skeleton loader (overlay only; removed after reveal) -->
+    <div
+      id="skeleton-loader"
+      class="fixed inset-0 z-[9999] flex flex-col bg-white transition-opacity duration-500 ease-out dark:bg-gray-900"
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+      aria-label="Loading page"
+    >
+      <!-- Floating glass bubbles (decorative skeleton version) -->
+      <div
+        class="pointer-events-none absolute inset-0 overflow-hidden"
+        aria-hidden="true"
+      >
+        <div
+          class="absolute left-[6%] top-[14%] h-28 w-28 rounded-full bg-gray-200/30 opacity-30 blur-xl transition-colors duration-300 ease-in-out dark:bg-gray-700/30 dark:opacity-40 sm:h-36 sm:w-36"
+        ></div>
+        <div
+          class="absolute right-[8%] top-[22%] h-40 w-40 rounded-full bg-gray-200/30 opacity-30 blur-xl transition-colors duration-300 ease-in-out dark:bg-gray-700/30 dark:opacity-40 sm:h-52 sm:w-52"
+        ></div>
+        <div
+          class="absolute bottom-[18%] left-[18%] h-24 w-24 rounded-full bg-gray-200/30 opacity-30 blur-xl transition-colors duration-300 ease-in-out dark:bg-gray-700/30 dark:opacity-40 sm:h-32 sm:w-32"
+        ></div>
+        <div
+          class="absolute bottom-[28%] right-[14%] h-20 w-20 rounded-full bg-gray-200/30 opacity-30 blur-xl transition-colors duration-300 ease-in-out dark:bg-gray-700/30 dark:opacity-40 sm:h-28 sm:w-28"
+        ></div>
+        <div
+          class="absolute left-[42%] top-[8%] h-16 w-16 rounded-full bg-gray-200/30 opacity-30 blur-xl transition-colors duration-300 ease-in-out dark:bg-gray-700/30 dark:opacity-40"
+        ></div>
+      </div>
+
+      <div
+        class="relative z-10 mx-auto flex w-full max-w-[1100px] flex-1 flex-col px-4 py-16"
+      >
+        <!-- Header skeleton - exact match of real header structure -->
+        <div class="header-intro relative mb-6 w-full text-center">
+          <!-- Theme toggle button skeleton -->
+          <div
+            class="skeleton-shimmer absolute right-0 top-0 z-20 h-9 w-12 rounded-lg"
+          ></div>
+          <!-- Glass card container skeleton -->
+          <div class="relative mx-auto inline-flex max-w-md flex-col items-center">
+            <!-- Background glow skeleton -->
+            <div
+              class="skeleton-shimmer pointer-events-none absolute inset-0 -z-10 h-full w-full rounded-xl"
+            ></div>
+            <!-- Card content skeleton -->
+            <div
+              class="skeleton-shimmer relative flex w-full flex-col items-center gap-2 rounded-xl px-6 py-4"
+            >
+              <!-- "✨ Featured" text skeleton -->
+              <div class="skeleton-shimmer h-3 w-12 rounded-full"></div>
+              <!-- "Image Carousel" heading skeleton -->
+              <div class="skeleton-shimmer h-8 w-48 rounded-lg"></div>
+              <!-- Description paragraph skeleton -->
+              <div class="skeleton-shimmer h-3 w-64 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carousel section skeleton - exact match of real carousel structure -->
+        <section class="relative w-full" aria-label="Image slider skeleton">
+          <!-- Main carousel container skeleton -->
+          <div
+            class="skeleton-shimmer group relative mx-auto w-full max-w-[920px] rounded-3xl p-5 sm:p-8"
+          >
+            <!-- Viewport skeleton -->
+            <div class="relative overflow-hidden py-2">
+              <!-- Track skeleton with slide placeholders -->
+              <div class="flex gap-6 sm:gap-8">
+                <!-- Active slide skeleton -->
+                <div class="shrink-0 w-[82%] max-w-[520px] sm:w-[75%] sm:max-w-[600px] lg:w-[68%] lg:max-w-[640px]">
+                  <div class="skeleton-shimmer scale-105 rounded-3xl p-3">
+                    <!-- Image placeholder skeleton -->
+                    <div class="skeleton-shimmer mb-2 h-[160px] w-full rounded-xl sm:h-[220px] lg:h-[280px]"></div>
+                    <!-- Tag skeleton -->
+                    <div class="skeleton-shimmer mb-2 h-5 w-16 rounded-full"></div>
+                    <!-- Title skeleton -->
+                    <div class="skeleton-shimmer mb-1 h-6 w-48 rounded-lg"></div>
+                    <!-- Description skeleton -->
+                    <div class="skeleton-shimmer h-3 w-full rounded-full"></div>
+                  </div>
+                </div>
+                <!-- Partial next slide skeleton (visible on right) -->
+                <div class="shrink-0 w-[82%] max-w-[520px] sm:w-[75%] sm:max-w-[600px] lg:w-[68%] lg:max-w-[640px]">
+                  <div class="skeleton-shimmer scale-90 rounded-3xl p-3 opacity-70">
+                    <div class="skeleton-shimmer mb-2 h-[160px] w-full rounded-xl sm:h-[220px] lg:h-[280px]"></div>
+                    <div class="skeleton-shimmer mb-2 h-5 w-16 rounded-full"></div>
+                    <div class="skeleton-shimmer mb-1 h-6 w-48 rounded-lg"></div>
+                    <div class="skeleton-shimmer h-3 w-full rounded-full"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Navigation buttons skeleton -->
+            <div
+              class="skeleton-shimmer absolute left-2 top-[38%] z-20 h-9 w-9 -translate-y-1/2 rounded-full sm:left-4 sm:h-11 sm:w-11"
+            ></div>
+            <div
+              class="skeleton-shimmer absolute right-2 top-[38%] z-20 h-9 w-9 -translate-y-1/2 rounded-full sm:right-4 sm:h-11 sm:w-11"
+            ></div>
+
+            <!-- Dot indicators skeleton -->
+            <div class="mt-6 flex items-center justify-center gap-2">
+              <div class="skeleton-shimmer h-2.5 w-6 rounded-full"></div>
+              <div class="skeleton-shimmer h-2 w-2 rounded-full"></div>
+              <div class="skeleton-shimmer h-2 w-2 rounded-full"></div>
+              <div class="skeleton-shimmer h-2 w-2 rounded-full"></div>
+              <div class="skeleton-shimmer h-2 w-2 rounded-full"></div>
+              <div class="skeleton-shimmer h-2 w-2 rounded-full"></div>
+              <div class="skeleton-shimmer h-2 w-2 rounded-full"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Footer skeleton -->
+      <footer
+        class="relative z-10 mt-auto w-full border-t border-gray-200/80 bg-white/10 py-6 text-center dark:border-gray-700/80 dark:bg-black/20"
+      >
+        <div class="skeleton-shimmer mx-auto h-4 max-w-xs rounded-full"></div>
+      </footer>
+    </div>
+
     <!-- Floating glass bubbles (decorative) -->
     <div
       class="pointer-events-none absolute inset-0 overflow-hidden"

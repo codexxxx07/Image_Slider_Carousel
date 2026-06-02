@@ -6,6 +6,48 @@
  * - Auto-play (setInterval), pause on hover
  */
 
+/* ——— Full-page skeleton loader (overlay; auto-dismiss 2–3s) ——— */
+
+const SKELETON_MIN_MS = 2000;
+const SKELETON_MAX_MS = 3000;
+const SKELETON_FADE_MS = 500;
+
+function initSkeletonLoader() {
+  const loader = document.getElementById("skeleton-loader");
+  if (!loader) return;
+
+  const delay =
+    SKELETON_MIN_MS +
+    Math.random() * (SKELETON_MAX_MS - SKELETON_MIN_MS);
+
+  let removed = false;
+
+  const removeLoader = () => {
+    if (removed) return;
+    removed = true;
+    loader.setAttribute("aria-busy", "false");
+    loader.remove();
+    document.body.classList.remove("skeleton-loading", "skeleton-revealed");
+  };
+
+  const reveal = () => {
+    loader.classList.add("skeleton-loader--exit");
+    document.body.classList.remove("skeleton-loading");
+    document.body.classList.add("skeleton-revealed");
+
+    loader.addEventListener("transitionend", (e) => {
+      if (e.target !== loader || e.propertyName !== "opacity") return;
+      removeLoader();
+    });
+
+    window.setTimeout(removeLoader, SKELETON_FADE_MS + 150);
+  };
+
+  window.setTimeout(reveal, delay);
+}
+
+initSkeletonLoader();
+
 /* ——— Light / Dark theme (session only; always light on reload) ——— */
 
 function initTheme() {
