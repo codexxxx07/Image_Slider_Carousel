@@ -21,10 +21,18 @@ function initSkeletonLoader() {
     Math.random() * (SKELETON_MAX_MS - SKELETON_MIN_MS);
 
   let removed = false;
+  let transitionHandler = null;
 
   const removeLoader = () => {
     if (removed) return;
     removed = true;
+    
+    // Clean up event listener to prevent memory leak
+    if (transitionHandler) {
+      loader.removeEventListener("transitionend", transitionHandler);
+      transitionHandler = null;
+    }
+    
     loader.setAttribute("aria-busy", "false");
     loader.remove();
     document.body.classList.remove("skeleton-loading", "skeleton-revealed");
@@ -35,10 +43,12 @@ function initSkeletonLoader() {
     document.body.classList.remove("skeleton-loading");
     document.body.classList.add("skeleton-revealed");
 
-    loader.addEventListener("transitionend", (e) => {
+    transitionHandler = (e) => {
       if (e.target !== loader || e.propertyName !== "opacity") return;
       removeLoader();
-    });
+    };
+    
+    loader.addEventListener("transitionend", transitionHandler);
 
     window.setTimeout(removeLoader, SKELETON_FADE_MS + 150);
   };
@@ -149,10 +159,36 @@ let realCount;
 let currentIndex = 1;
 let isPaused = false;
 let autoplayTimer = null;
+let resizeTimer = null;
+let isTransitioning = false;
+let cachedTrackGap = null;
+
+// Store event listeners for cleanup
+const eventListeners = [];
+
+// Rate limiting: minimum time between navigation actions (ms)
+const NAVIGATION_THROTTLE_MS = 300;
+let lastNavigationTime = 0;
 
 function getTrackGap() {
+  // Cache the gap value to avoid expensive computed style calls
+  if (cachedTrackGap !== null) return cachedTrackGap;
+  
   const gap = getComputedStyle(trackEl).gap;
-  return Number.parseFloat(gap) || 16;
+  cachedTrackGap = Number.parseFloat(gap) || 16;
+  return cachedTrackGap;
+}
+
+// Invalidate cache on resize
+function invalidateTrackGapCache() {
+  cachedTrackGap = null;
+}
+
+// XSS-safe HTML escaping
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
 }
 
 function buildSlides() {
@@ -166,26 +202,54 @@ function buildSlides() {
     item.className =
       "slide shrink-0 w-[82%] max-w-[520px] sm:w-[75%] sm:max-w-[600px] lg:w-[68%] lg:max-w-[640px]";
 
-    item.innerHTML = `
-      <div class="slide-inner scale-90 opacity-70 rounded-3xl border border-white/30 bg-white/10 p-3 shadow-[0_8px_32px_rgba(0,0,0,0.15)] backdrop-blur-xl transition duration-500 ease-in-out hover:scale-105 hover:shadow-2xl">
-        <div class="overflow-hidden rounded-xl">
-          <img
-            src="${slide.src}"
-            alt="${slide.alt}"
-            loading="lazy"
-            class="block h-[160px] w-full rounded-xl object-cover sm:h-[220px] lg:h-[280px]"
-            width="900"
-            height="600"
-          />
-        </div>
-        <div class="mt-2 px-2 pb-1">
-          <span class="inline-block rounded-full bg-white/30 px-3 py-1 text-xs font-medium text-gray-600">${slide.tag}</span>
-          <h3 class="mt-2 text-xl font-semibold text-gray-800 sm:text-2xl">${slide.title}</h3>
-          <p class="mt-1 text-sm text-gray-500">${slide.description}</p>
-        </div>
-      </div>
-    `;
-
+    // Use textContent for security, build DOM safely
+    const inner = document.createElement("div");
+    inner.className = "slide-inner scale-90 opacity-70 rounded-3xl border border-white/30 bg-white/10 p-3 shadow-[0_8px_32px_rgba(0,0,0,0.15)] backdrop-blur-xl transition duration-500 ease-in-out hover:scale-105 hover:shadow-2xl";
+    
+    const imgContainer = document.createElement("div");
+    imgContainer.className = "overflow-hidden rounded-xl";
+    
+    const img = document.createElement("img");
+    img.src = slide.src;
+    img.alt = escapeHtml(slide.alt);
+    img.loading = i === 1 ? "eager" : "lazy"; // Preload first real slide
+    img.className = "block h-[160px] w-full rounded-xl object-cover sm:h-[220px] lg:h-[280px]";
+    img.width = 900;
+    img.height = 600;
+    img.decoding = "async";
+    
+    // Add error handling for images
+    img.onerror = function() {
+      this.style.display = 'none';
+      const fallback = document.createElement('div');
+      fallback.className = 'flex items-center justify-center h-[160px] sm:h-[220px] lg:h-[280px] bg-gray-200 rounded-xl text-gray-500 text-sm';
+      fallback.textContent = 'Image not available';
+      imgContainer.appendChild(fallback);
+    };
+    
+    imgContainer.appendChild(img);
+    inner.appendChild(imgContainer);
+    
+    const content = document.createElement("div");
+    content.className = "mt-2 px-2 pb-1";
+    
+    const tag = document.createElement("span");
+    tag.className = "inline-block rounded-full bg-white/30 px-3 py-1 text-xs font-medium text-gray-600";
+    tag.textContent = escapeHtml(slide.tag);
+    content.appendChild(tag);
+    
+    const title = document.createElement("h3");
+    title.className = "mt-2 text-xl font-semibold text-gray-800 sm:text-2xl";
+    title.textContent = escapeHtml(slide.title);
+    content.appendChild(title);
+    
+    const desc = document.createElement("p");
+    desc.className = "mt-1 text-sm text-gray-500";
+    desc.textContent = escapeHtml(slide.description);
+    content.appendChild(desc);
+    
+    inner.appendChild(content);
+    item.appendChild(inner);
     trackEl.appendChild(item);
   });
 }
@@ -200,7 +264,11 @@ function buildDots() {
     btn.dataset.dotIndex = String(i);
     btn.className =
       "dot h-2 w-2 rounded-full bg-gray-300/80 transition-all duration-300 ease-in-out hover:bg-gray-400";
-    btn.addEventListener("click", () => goToRealIndex(i));
+    
+    const clickHandler = () => goToRealIndex(i);
+    btn.addEventListener("click", clickHandler);
+    eventListeners.push({ element: btn, event: 'click', handler: clickHandler });
+    
     dotsEl.appendChild(btn);
   });
 }
@@ -264,10 +332,28 @@ function updateDots() {
 }
 
 function goToTrackIndex(index, animate = true) {
+  // Rate limiting: prevent rapid navigation
+  const now = Date.now();
+  if (isTransitioning && now - lastNavigationTime < NAVIGATION_THROTTLE_MS) {
+    return;
+  }
+  
+  lastNavigationTime = now;
+  isTransitioning = true;
+  
   currentIndex = index;
   applyTransform(animate);
   updateSlideStates();
   updateDots();
+  
+  // Reset transition lock after animation completes
+  if (animate) {
+    setTimeout(() => {
+      isTransitioning = false;
+    }, 500);
+  } else {
+    isTransitioning = false;
+  }
 }
 
 function goToRealIndex(realIndex) {
@@ -288,16 +374,22 @@ function prev() {
 function onTransitionEnd(e) {
   if (e.target !== trackEl || e.propertyName !== "transform") return;
 
-  if (currentIndex === 0) {
-    currentIndex = realCount;
-    applyTransform(false);
-    updateSlideStates();
-    updateDots();
-  } else if (currentIndex === realCount + 1) {
-    currentIndex = 1;
-    applyTransform(false);
-    updateSlideStates();
-    updateDots();
+  try {
+    if (currentIndex === 0) {
+      currentIndex = realCount;
+      applyTransform(false);
+      updateSlideStates();
+      updateDots();
+    } else if (currentIndex === realCount + 1) {
+      currentIndex = 1;
+      applyTransform(false);
+      updateSlideStates();
+      updateDots();
+    }
+    isTransitioning = false;
+  } catch (error) {
+    console.error('Transition end error:', error);
+    isTransitioning = false;
   }
 }
 
@@ -320,9 +412,20 @@ function resetAutoplay() {
 }
 
 function bindEvents() {
-  prevBtn.addEventListener("click", prev);
-  nextBtn.addEventListener("click", next);
-  trackEl.addEventListener("transitionend", onTransitionEnd);
+  // Store event listeners for cleanup
+  const prevHandler = () => { try { prev(); } catch (e) { console.error('Prev button error:', e); } };
+  const nextHandler = () => { try { next(); } catch (e) { console.error('Next button error:', e); } };
+  const transitionHandler = onTransitionEnd;
+  
+  prevBtn.addEventListener("click", prevHandler);
+  nextBtn.addEventListener("click", nextHandler);
+  trackEl.addEventListener("transitionend", transitionHandler);
+  
+  eventListeners.push(
+    { element: prevBtn, event: 'click', handler: prevHandler },
+    { element: nextBtn, event: 'click', handler: nextHandler },
+    { element: trackEl, event: 'transitionend', handler: transitionHandler }
+  );
 
   carouselEl.addEventListener("mouseenter", () => {
     isPaused = true;
@@ -334,42 +437,90 @@ function bindEvents() {
     startAutoplay();
   });
 
-  window.addEventListener(
-    "resize",
-    () => {
-      applyTransform(false);
-      updateSlideStates();
-    },
-    { passive: true }
-  );
+  // Debounced resize handler
+  const resizeHandler = () => {
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      try {
+        invalidateTrackGapCache();
+        applyTransform(false);
+        updateSlideStates();
+      } catch (error) {
+        console.error('Resize handler error:', error);
+      }
+    }, 150);
+  };
+  
+  window.addEventListener("resize", resizeHandler, { passive: true });
+  eventListeners.push({ element: window, event: 'resize', handler: resizeHandler });
 
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) stopAutoplay();
-    else if (!isPaused) startAutoplay();
+    try {
+      if (document.hidden) stopAutoplay();
+      else if (!isPaused) startAutoplay();
+    } catch (error) {
+      console.error('Visibility change error:', error);
+    }
   });
+  
+  // Cleanup on page unload
+  window.addEventListener('beforeunload', cleanup);
+  eventListeners.push({ element: window, event: 'beforeunload', handler: cleanup });
+}
+
+function cleanup() {
+  // Stop autoplay
+  stopAutoplay();
+  
+  // Clear resize timer
+  if (resizeTimer) {
+    clearTimeout(resizeTimer);
+    resizeTimer = null;
+  }
+  
+  // Remove all stored event listeners
+  eventListeners.forEach(({ element, event, handler }) => {
+    try {
+      element.removeEventListener(event, handler);
+    } catch (e) {
+      // Ignore errors during cleanup
+    }
+  });
+  eventListeners.length = 0;
 }
 
 function initSlider() {
-  carouselEl = document.getElementById("carousel");
-  viewportEl = document.getElementById("viewport");
-  trackEl = document.getElementById("track");
-  prevBtn = document.getElementById("prev");
-  nextBtn = document.getElementById("next");
-  dotsEl = document.getElementById("dots");
+  try {
+    carouselEl = document.getElementById("carousel");
+    viewportEl = document.getElementById("viewport");
+    trackEl = document.getElementById("track");
+    prevBtn = document.getElementById("prev");
+    nextBtn = document.getElementById("next");
+    dotsEl = document.getElementById("dots");
 
-  if (!carouselEl || !viewportEl || !trackEl || !prevBtn || !nextBtn || !dotsEl) {
-    throw new Error("Slider elements not found. Check HTML ids.");
+    if (!carouselEl || !viewportEl || !trackEl || !prevBtn || !nextBtn || !dotsEl) {
+      console.error("Slider elements not found. Check HTML ids.");
+      return;
+    }
+
+    realCount = SLIDES.length;
+    buildSlides();
+    buildDots();
+    goToTrackIndex(1, false);
+    bindEvents();
+    startAutoplay();
+  } catch (error) {
+    console.error('Slider initialization error:', error);
+    // Attempt cleanup on error
+    cleanup();
   }
-
-  realCount = SLIDES.length;
-  buildSlides();
-  buildDots();
-  goToTrackIndex(1, false);
-  bindEvents();
-  startAutoplay();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  initTheme();
-  initSlider();
+  try {
+    initTheme();
+    initSlider();
+  } catch (error) {
+    console.error('Initialization error:', error);
+  }
 });

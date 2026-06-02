@@ -64,6 +64,8 @@ body.skeleton-revealed #skeleton-loader ~ * {
   );
   transform: translateX(-100%);
   animation: skeleton-shimmer-wave 1.6s ease-in-out infinite;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .dark .skeleton-shimmer::after {
@@ -89,15 +91,19 @@ body.skeleton-revealed #skeleton-loader ~ * {
 /* Carousel track slide transition (moved from inline style on #track) */
 .track-slide {
   transition: transform 0.5s ease-in-out;
+  will-change: transform; /* Hint browser for GPU acceleration */
+  transform: translateZ(0); /* Force GPU acceleration */
 }
 
 /* ─── Floating background orbs ─── */
 .blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(100px);
+  filter: blur(80px); /* Reduced from 100px for better performance */
   pointer-events: none;
   z-index: 0;
+  will-change: transform; /* Hint browser for GPU acceleration */
+  backface-visibility: hidden; /* Prevent flickering */
 }
 
 .blob-1 {
@@ -108,6 +114,7 @@ body.skeleton-revealed #skeleton-loader ~ * {
   top: 8%;
   left: 5%;
   animation: blob-drift-1 11s ease-in-out infinite alternate;
+  transform: translateZ(0); /* Force GPU acceleration */
 }
 
 .blob-2 {
@@ -118,6 +125,7 @@ body.skeleton-revealed #skeleton-loader ~ * {
   top: 55%;
   right: 8%;
   animation: blob-drift-2 9s ease-in-out infinite alternate;
+  transform: translateZ(0); /* Force GPU acceleration */
 }
 
 .blob-3 {
@@ -128,6 +136,7 @@ body.skeleton-revealed #skeleton-loader ~ * {
   bottom: 10%;
   left: 20%;
   animation: blob-drift-3 12s ease-in-out infinite alternate;
+  transform: translateZ(0); /* Force GPU acceleration */
 }
 
 .blob-4 {
@@ -138,6 +147,7 @@ body.skeleton-revealed #skeleton-loader ~ * {
   top: 20%;
   right: 25%;
   animation: blob-drift-4 10s ease-in-out infinite alternate;
+  transform: translateZ(0); /* Force GPU acceleration */
 }
 
 .blob-5 {
@@ -148,6 +158,7 @@ body.skeleton-revealed #skeleton-loader ~ * {
   bottom: 25%;
   right: 15%;
   animation: blob-drift-5 8s ease-in-out infinite alternate;
+  transform: translateZ(0); /* Force GPU acceleration */
 }
 
 .blob-6 {
@@ -158,6 +169,7 @@ body.skeleton-revealed #skeleton-loader ~ * {
   top: 40%;
   left: 45%;
   animation: blob-drift-6 11.5s ease-in-out infinite alternate;
+  transform: translateZ(0); /* Force GPU acceleration */
 }
 
 @keyframes blob-drift-1 {
@@ -203,8 +215,8 @@ body.skeleton-revealed #skeleton-loader ~ * {
 /* ─── Glassmorphism card shell ─── */
 .glass-card {
   background: rgba(255, 255, 255, 0.07);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(150%); /* Reduced blur for better performance */
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
   border: 1px solid rgba(255, 255, 255, 0.13);
   border-radius: 20px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
@@ -214,6 +226,8 @@ body.skeleton-revealed #skeleton-loader ~ * {
     box-shadow 0.45s ease,
     opacity 0.6s ease,
     filter 0.6s ease;
+  will-change: transform, box-shadow; /* Hint browser for GPU acceleration */
+  transform: translateZ(0); /* Force GPU acceleration */
 }
 
 .glass-card:hover {
@@ -290,14 +304,14 @@ body.skeleton-revealed #skeleton-loader ~ * {
 .carousel-card.is-far .glass-card {
   animation: none;
   opacity: 0.45;
-  filter: blur(2px);
+  filter: blur(1px); /* Reduced from 2px for better performance */
 }
 
 /* Back card (±3 on 6-item ring) */
 .carousel-card.is-back .glass-card {
   animation: none;
   opacity: 0.3;
-  filter: blur(3px);
+  filter: blur(2px); /* Reduced from 3px for better performance */
 }
 
 /* Shimmer sweep when card becomes active */
@@ -330,10 +344,12 @@ body.skeleton-revealed #skeleton-loader ~ * {
 /* Glassmorphic nav arrows */
 .btn-glass {
   background: rgba(255, 255, 255, 0.07);
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(12px) saturate(140%); /* Reduced for better performance */
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
   border: 1px solid rgba(255, 255, 255, 0.2);
   transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  will-change: transform, box-shadow; /* Hint browser for GPU acceleration */
+  transform: translateZ(0); /* Force GPU acceleration */
 }
 
 .btn-glass:hover {
@@ -390,5 +406,39 @@ body.skeleton-revealed #skeleton-loader ~ * {
     height: 260px;
     margin-left: -100px;
     margin-top: -130px;
+  }
+}
+
+/* Optimize for reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer::after {
+    animation: none;
+  }
+  
+  .blob {
+    animation: none;
+  }
+  
+  .track-slide {
+    transition: none;
+  }
+  
+  .glass-card {
+    transition: none;
+  }
+  
+  .btn-glass {
+    transition: none;
+  }
+}
+
+/* Pause animations when page is not visible to save resources */
+@media (prefers-reduced-data: reduce) {
+  .blob {
+    animation-play-state: paused;
+  }
+  
+  .skeleton-shimmer::after {
+    animation-play-state: paused;
   }
 }
