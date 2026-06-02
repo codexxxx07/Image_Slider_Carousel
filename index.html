@@ -44,14 +44,43 @@
     <main
       class="relative z-10 mx-auto flex min-h-screen w-full max-w-[1100px] flex-col items-center justify-center px-4 py-16"
     >
-      <header class="mb-10 text-center">
-        <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">
-          Image Slider
-        </h1>
+      <header class="header-intro relative mb-6 w-full text-center">
+        <style>
+          @keyframes header-intro {
+            from {
+              opacity: 0;
+              transform: translateY(8px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          .header-intro {
+            animation: header-intro 300ms ease-out forwards;
+          }
+        </style>
 
-        <p class="mt-2 text-sm font-normal text-gray-500 sm:text-base">
-          Auto-play — hover to pause
-        </p>
+        <div class="relative mx-auto inline-flex max-w-md flex-col items-center">
+          <div
+            class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-purple-200 to-blue-200 opacity-40 blur-2xl"
+            aria-hidden="true"
+          ></div>
+
+          <div
+            class="relative flex w-full flex-col items-center gap-2 rounded-xl border border-gray-200 bg-white/60 px-6 py-4 shadow-md backdrop-blur-lg"
+          >
+            <p class="text-xs text-gray-500">✨ Featured</p>
+
+            <h1 class="text-3xl font-bold text-gray-900 tracking-wide">
+              Image Carousel
+            </h1>
+
+            <p class="text-sm text-gray-600">
+              A smooth and modern browsing experience
+            </p>
+          </div>
+        </div>
       </header>
 
       <section class="relative w-full" aria-label="Image slider">
