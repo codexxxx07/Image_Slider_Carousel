@@ -6,6 +6,44 @@
  * - Auto-play (setInterval), pause on hover
  */
 
+/* ——— Light / Dark theme ——— */
+
+function initTheme() {
+  const toggle = document.getElementById("theme-toggle");
+  const icon = document.getElementById("theme-icon");
+  if (!toggle || !icon) return;
+
+  const applyTheme = (isDark) => {
+    document.documentElement.classList.toggle("dark", isDark);
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+    icon.textContent = isDark ? "☀️" : "🌙";
+    toggle.setAttribute(
+      "aria-label",
+      isDark ? "Switch to light mode" : "Switch to dark mode"
+    );
+  };
+
+  const saved = localStorage.getItem("theme");
+  if (saved === "dark" || saved === "light") {
+    applyTheme(saved === "dark");
+  } else {
+    applyTheme(document.documentElement.classList.contains("dark"));
+  }
+
+  toggle.addEventListener("click", () => {
+    const nextDark = !document.documentElement.classList.contains("dark");
+    icon.style.transform = "scale(0.75) rotate(-90deg)";
+    icon.style.opacity = "0";
+    window.setTimeout(() => {
+      applyTheme(nextDark);
+      icon.style.transform = "scale(1) rotate(0deg)";
+      icon.style.opacity = "1";
+    }, 150);
+  });
+}
+
+initTheme();
+
 const SLIDES = [
   {
     src: "https://picsum.photos/id/1015/900/600",

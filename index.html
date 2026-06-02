@@ -13,38 +13,59 @@
 
     <title>Glass Image Slider</title>
 
+    <script>
+      if (localStorage.getItem("theme") === "dark") {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
+
     <!-- Tailwind CLI compiled stylesheet -->
 
     <link rel="stylesheet" href="./dist/output.css" />
   </head>
 
-  <body class="relative min-h-screen overflow-x-hidden bg-white text-gray-900 antialiased">
+  <body
+    class="relative min-h-screen overflow-x-hidden bg-white text-gray-900 antialiased transition-colors duration-300 ease-in-out dark:bg-gray-900 dark:text-white"
+  >
     <!-- Floating glass bubbles (decorative) -->
     <div
       class="pointer-events-none absolute inset-0 overflow-hidden"
       aria-hidden="true"
     >
       <div
-        class="absolute left-[6%] top-[14%] h-28 w-28 rounded-full bg-white/20 opacity-30 blur-xl sm:h-36 sm:w-36"
+        class="absolute left-[6%] top-[14%] h-28 w-28 rounded-full bg-white/20 opacity-30 blur-xl transition-colors duration-300 ease-in-out dark:bg-purple-500/10 dark:opacity-40 sm:h-36 sm:w-36"
       ></div>
       <div
-        class="absolute right-[8%] top-[22%] h-40 w-40 rounded-full bg-white/20 opacity-30 blur-xl sm:h-52 sm:w-52"
+        class="absolute right-[8%] top-[22%] h-40 w-40 rounded-full bg-white/20 opacity-30 blur-xl transition-colors duration-300 ease-in-out dark:bg-blue-500/10 dark:opacity-40 sm:h-52 sm:w-52"
       ></div>
       <div
-        class="absolute bottom-[18%] left-[18%] h-24 w-24 rounded-full bg-white/20 opacity-30 blur-xl sm:h-32 sm:w-32"
+        class="absolute bottom-[18%] left-[18%] h-24 w-24 rounded-full bg-white/20 opacity-30 blur-xl transition-colors duration-300 ease-in-out dark:bg-purple-500/10 dark:opacity-40 sm:h-32 sm:w-32"
       ></div>
       <div
-        class="absolute bottom-[28%] right-[14%] h-20 w-20 rounded-full bg-white/20 opacity-30 blur-xl sm:h-28 sm:w-28"
+        class="absolute bottom-[28%] right-[14%] h-20 w-20 rounded-full bg-white/20 opacity-30 blur-xl transition-colors duration-300 ease-in-out dark:bg-blue-500/10 dark:opacity-40 sm:h-28 sm:w-28"
       ></div>
       <div
-        class="absolute left-[42%] top-[8%] h-16 w-16 rounded-full bg-white/20 opacity-30 blur-xl"
+        class="absolute left-[42%] top-[8%] h-16 w-16 rounded-full bg-white/20 opacity-30 blur-xl transition-colors duration-300 ease-in-out dark:bg-indigo-500/10 dark:opacity-40"
       ></div>
     </div>
 
     <main
-      class="relative z-10 mx-auto flex min-h-screen w-full max-w-[1100px] flex-col items-center justify-center px-4 py-16"
+      class="relative z-10 mx-auto flex min-h-screen w-full max-w-[1100px] flex-col items-center justify-center px-4 py-16 transition-colors duration-300 ease-in-out"
     >
       <header class="header-intro relative mb-6 w-full text-center">
+        <button
+          id="theme-toggle"
+          type="button"
+          class="absolute right-0 top-0 z-20 rounded-lg border border-gray-200 bg-white/60 px-3 py-1 text-base shadow-sm backdrop-blur-lg transition-all duration-300 ease-in-out hover:bg-white/80 dark:border-gray-700 dark:bg-gray-800/80 dark:hover:bg-gray-800 dark:shadow-purple-500/10 dark:shadow-md"
+          aria-label="Switch to dark mode"
+        >
+          <span
+            id="theme-icon"
+            class="inline-block transition-all duration-300 ease-in-out"
+            aria-hidden="true"
+            >🌙</span
+          >
+        </button>
         <style>
           @keyframes header-intro {
             from {
@@ -63,20 +84,26 @@
 
         <div class="relative mx-auto inline-flex max-w-md flex-col items-center">
           <div
-            class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-purple-200 to-blue-200 opacity-40 blur-2xl"
+            class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-purple-200 to-blue-200 opacity-40 blur-2xl transition-opacity duration-300 ease-in-out dark:from-purple-900/40 dark:to-blue-900/40 dark:opacity-60"
             aria-hidden="true"
           ></div>
 
           <div
-            class="relative flex w-full flex-col items-center gap-2 rounded-xl border border-gray-200 bg-white/60 px-6 py-4 shadow-md backdrop-blur-lg"
+            class="relative flex w-full flex-col items-center gap-2 rounded-xl border border-gray-200 bg-white/60 px-6 py-4 shadow-md backdrop-blur-lg transition-colors duration-300 ease-in-out dark:border-gray-700 dark:bg-gray-800/60 dark:shadow-purple-500/5"
           >
-            <p class="text-xs text-gray-500">✨ Featured</p>
+            <p class="text-xs text-gray-500 transition-colors duration-300 ease-in-out dark:text-gray-400">
+              ✨ Featured
+            </p>
 
-            <h1 class="text-3xl font-bold text-gray-900 tracking-wide">
+            <h1
+              class="text-3xl font-bold tracking-wide text-gray-900 transition-colors duration-300 ease-in-out dark:text-white"
+            >
               Image Carousel
             </h1>
 
-            <p class="text-sm text-gray-600">
+            <p
+              class="text-sm text-gray-600 transition-colors duration-300 ease-in-out dark:text-gray-300"
+            >
               A smooth and modern browsing experience
             </p>
           </div>
