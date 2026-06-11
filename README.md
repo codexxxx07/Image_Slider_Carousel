@@ -10,9 +10,7 @@ Perfect for portfolios, product galleries, landing pages, and any application re
 
 | Initial State | Sliding Transition | Active Slide |
 |---------------|-------------------|--------------|
-| *(Add screenshots to `/screenshots` folder)* | *(Add screenshots to `/screenshots` folder)* | *(Add screenshots to `/screenshots` folder)* |
-
-> **Tip:** Capture screenshots showcasing the glassmorphism UI, smooth transitions, and responsive behavior across different screen sizes.
+| *![Light Mode](/assets/Img1.png)* | *![Light Mode](/assets/Img2.png)* | *![Dark Mode](/assets/Img3.png)* |
 
 ---
 
